@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   HMSAudioFilePlayerNode,
   HMSAudioMixingMode,
@@ -227,8 +228,7 @@ const Meeting = () => {
       style={[
         styles.container,
         showLandscapeLayout ? {flexDirection: 'row'} : null,
-      ]}
-    >
+      ]}>
       {showLandscapeLayout ? <StatusBar hidden={true} /> : null}
       {isPipModeActive ? null : (
         <Header
@@ -1054,7 +1054,9 @@ const DisplayView = (data: {
         // remove Session Store key update listener on cleanup
         sessionStoreListeners.current.forEach(listener => listener.remove());
 
-        if (toastTimeoutId !== null) clearTimeout(toastTimeoutId);
+        if (toastTimeoutId !== null) {
+          clearTimeout(toastTimeoutId);
+        }
       };
     }
   }, [hmsSessionStore]);
@@ -1143,8 +1145,7 @@ const DisplayView = (data: {
             modalPosiion="center"
             viewStyle={{minWidth: '70%', width: undefined}}
             modalVisible={data?.modalVisible === ModalTypes.PEER_SETTINGS}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             {selectedPeerTrackNode && data?.localPeer ? (
               <PeerSettingsModalContent
                 localPeer={data.localPeer}
@@ -1167,8 +1168,7 @@ const DisplayView = (data: {
             modalVisible={
               data.modalVisible === ModalTypes.HLS_PLAYER_ASPECT_RATIO
             }
-            setModalVisible={() => data.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeAspectRatio
               instance={hmsInstance}
               cancelModal={() => data.setModalVisible(ModalTypes.DEFAULT)}
@@ -1178,8 +1178,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={!!capturedImagePath}
-            setModalVisible={() => setCapturedImagePath(null)}
-          >
+            setModalVisible={() => setCapturedImagePath(null)}>
             {capturedImagePath && data.localPeer ? (
               <SaveScreenshot
                 peer={data.localPeer}
@@ -1193,8 +1192,7 @@ const DisplayView = (data: {
             modalVisible={
               data?.modalVisible === ModalTypes.STREAMING_QUALITY_SETTING
             }
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             {trackToChangeRef.current ? (
               <StreamingQualityModalContent
                 track={trackToChangeRef.current}
@@ -1207,8 +1205,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.LEAVE_ROOM}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <LeaveRoomModal
               onSuccess={onLeavePress}
               cancelModal={() => data?.setModalVisible(ModalTypes.DEFAULT)}
@@ -1217,8 +1214,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.END_ROOM}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <EndRoomModal
               onSuccess={onEndRoomPress}
               cancelModal={() => data?.setModalVisible(ModalTypes.DEFAULT)}
@@ -1229,15 +1225,13 @@ const DisplayView = (data: {
             animationIn={'slideInUp'}
             animationOut={'slideOutDown'}
             modalVisible={data?.modalVisible === ModalTypes.CHAT}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChatWindow localPeer={data?.localPeer} />
           </DefaultModal>
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.CHANGE_TRACK}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeTrackStateModal
               localPeer={data?.localPeer}
               roleChangeRequest={roleChangeRequest}
@@ -1247,8 +1241,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.CHANGE_ROLE_ACCEPT}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeRoleAccepteModal
               instance={hmsInstance}
               roleChangeRequest={roleChangeRequest}
@@ -1259,8 +1252,7 @@ const DisplayView = (data: {
             animationIn={'slideInUp'}
             animationOut={'slideOutDown'}
             modalVisible={data?.modalVisible === ModalTypes.PARTICIPANTS}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ParticipantsModal
               instance={hmsInstance}
               localPeer={data?.localPeer}
@@ -1272,8 +1264,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.CHANGE_ROLE}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeRoleModal
               instance={hmsInstance}
               peer={updatePeer}
@@ -1283,8 +1274,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.VOLUME}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeVolumeModal
               instance={hmsInstance}
               peer={updatePeer}
@@ -1294,8 +1284,7 @@ const DisplayView = (data: {
           <DefaultModal
             modalPosiion="center"
             modalVisible={data?.modalVisible === ModalTypes.CHANGE_NAME}
-            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}
-          >
+            setModalVisible={() => data?.setModalVisible(ModalTypes.DEFAULT)}>
             <ChangeNameModal
               instance={hmsInstance}
               peer={updatePeer}
@@ -1360,14 +1349,12 @@ const Header = ({
       style={[
         styles.iconTopWrapper,
         landscapeLayout ? styles.iconTopWrapperLandscape : null,
-      ]}
-    >
+      ]}>
       <View
         style={[
           styles.iconTopSubWrapper,
           landscapeLayout ? styles.iconTopSubWrapperLandscape : null,
-        ]}
-      >
+        ]}>
         <Menu
           visible={modalVisible === ModalTypes.LEAVE_MENU}
           anchor={
@@ -1386,11 +1373,9 @@ const Header = ({
             />
           }
           onRequestClose={() => setModalVisible(ModalTypes.DEFAULT)}
-          style={styles.participantsMenuContainer}
-        >
+          style={styles.participantsMenuContainer}>
           <MenuItem
-            onPress={() => setModalVisible(ModalTypes.LEAVE_ROOM, true)}
-          >
+            onPress={() => setModalVisible(ModalTypes.LEAVE_ROOM, true)}>
             <View style={styles.participantMenuItem}>
               <Feather
                 name="log-out"
@@ -1402,8 +1387,7 @@ const Header = ({
           </MenuItem>
           {localPeer?.role?.permissions?.endRoom && (
             <MenuItem
-              onPress={() => setModalVisible(ModalTypes.END_ROOM, true)}
-            >
+              onPress={() => setModalVisible(ModalTypes.END_ROOM, true)}>
               <View style={styles.participantMenuItem}>
                 <Feather
                   name="alert-triangle"
@@ -1437,8 +1421,7 @@ const Header = ({
         style={[
           styles.iconTopSubWrapper,
           landscapeLayout ? styles.iconTopSubWrapperLandscape : null,
-        ]}
-      >
+        ]}>
         {(room?.browserRecordingState?.running ||
           room?.hlsRecordingState?.running) && (
           <MaterialCommunityIcons
@@ -1639,14 +1622,12 @@ const Footer = ({
       style={[
         styles.iconBotttomWrapper,
         landscapeLayout ? styles.iconBotttomWrapperLandscape : null,
-      ]}
-    >
+      ]}>
       <View
         style={[
           styles.iconBotttomButtonWrapper,
           landscapeLayout ? styles.iconBotttomButtonWrapperLandscape : null,
-        ]}
-      >
+        ]}>
         {localPeer?.role?.publishSettings?.allowed?.includes('audio') && (
           <CustomButton
             onPress={() => {
@@ -1745,8 +1726,7 @@ const Footer = ({
         animationIn={'slideInUp'}
         animationOut={'slideOutDown'}
         modalVisible={modalVisible === ModalTypes.SETTINGS}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <RoomSettingsModalContent
           localPeer={localPeer}
           isHLSStreaming={isHlsStreaming}
@@ -1766,8 +1746,7 @@ const Footer = ({
         animationIn={'slideInUp'}
         animationOut={'slideOutDown'}
         modalVisible={modalVisible === ModalTypes.RTC_STATS}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <RtcStatsModal />
       </DefaultModal>
       <DefaultModal
@@ -1776,8 +1755,7 @@ const Footer = ({
           modalVisible === ModalTypes.RECORDING ||
           modalVisible === ModalTypes.RESOLUTION
         }
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <RecordingModal
           instance={hmsInstance}
           roomID={roomID}
@@ -1788,8 +1766,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.HLS_STREAMING}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <HlsStreamingModal
           instance={hmsInstance}
           roomID={roomID}
@@ -1799,8 +1776,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.CHANGE_TRACK_ROLE}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <ChangeTrackStateForRoleModal
           instance={hmsInstance}
           localPeer={localPeer}
@@ -1810,8 +1786,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.SWITCH_AUDIO_OUTPUT}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <ChangeAudioOutputModal
           instance={hmsInstance}
           cancelModal={() => setModalVisible(ModalTypes.DEFAULT)}
@@ -1820,8 +1795,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.CHANGE_AUDIO_MODE}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <ChangeAudioModeModal
           instance={hmsInstance}
           audioMode={audioMode}
@@ -1832,8 +1806,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.AUDIO_MIXING_MODE}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <ChangeAudioMixingModeModal
           instance={hmsInstance}
           newAudioMixingMode={newAudioMixingMode}
@@ -1844,8 +1817,7 @@ const Footer = ({
       <DefaultModal
         modalPosiion="center"
         modalVisible={modalVisible === ModalTypes.BULK_ROLE_CHANGE}
-        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}
-      >
+        setModalVisible={() => setModalVisible(ModalTypes.DEFAULT)}>
         <ChangeBulkRoleModal
           cancelModal={() => setModalVisible(ModalTypes.DEFAULT)}
         />

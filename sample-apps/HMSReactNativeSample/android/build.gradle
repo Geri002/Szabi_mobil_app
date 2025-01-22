@@ -3,17 +3,17 @@
 buildscript {
     ext {
         buildToolsVersion = "34.0.0"
-        minSdkVersion = 21
+        minSdkVersion = 23
         compileSdkVersion = 34
         targetSdkVersion = 34
-        ndkVersion = "21.4.7075529"
+        ndkVersion = "27.0.12077973"
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.1.0")
+        classpath('com.android.tools.build:gradle:8.7.3')
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -34,21 +34,30 @@ allprojects {
         maven {
             url "https://maven.100ms.live/releases"
         }
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
 
         google()
         maven {
             url "https://maven.google.com"
         }
     }
-    subprojects {
-        afterEvaluate { project ->
-            if (project.hasProperty('android')) {
-                project.android {
-                    if (namespace == null) {
-                        namespace project.group
-                    }
-                }
-            }
-        }
+    // subprojects {
+    //     afterEvaluate { project ->
+    //         if (project.hasProperty('android')) {
+    //             project.android {
+    //                 if (namespace == null) {
+    //                     namespace project.group
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+  tasks.withType(JavaCompile).tap {
+    configureEach {
+      options.encoding = 'UTF-8'
+      sourceCompatibility = '17'
+      targetCompatibility = '17'
     }
+  }
 }
