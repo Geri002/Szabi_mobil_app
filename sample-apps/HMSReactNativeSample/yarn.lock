@@ -7065,7 +7065,7 @@ react-native-safe-area-context@^3.4.1, "react-native-safe-area-context@>= 3.0.0"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-3.4.1.tgz"
   integrity sha512-xfpVd0CiZR7oBhuwJ2HcZMehg5bjha1Ohu1XHpcT+9ykula0TgovH2BNU0R5Krzf/jBR1LMjR6VabxdlUjqxcA==
 
-react-native-screens@^3.35.0, "react-native-screens@>= 3.0.0":
+"react-native-screens@>= 3.0.0":
   version "3.35.0"
   resolved "https://registry.npmjs.org/react-native-screens/-/react-native-screens-3.35.0.tgz"
   integrity sha512-rmkqb/M/SQIrXwygk6pXcOhgHltYAhidf1WceO7ujAxkr6XtwmgFyd1HIztsrJa568GrAuwPdQ11I7TpVk+XsA==
