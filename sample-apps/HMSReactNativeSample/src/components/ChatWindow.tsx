@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, memo} from 'react';
 import {
   View,
@@ -29,7 +30,7 @@ import {COLORS} from '../utils/theme';
 import type {RootState} from '../redux';
 import {CustomInput} from './CustomInput';
 import {CustomButton} from './CustomButton';
-import {addMessage, addPinnedMessage} from '../redux/actions';
+import {addMessage} from '../redux/actions';
 
 const getTimeStringin12HourFormat = (time: Date) => {
   let hours = time.getHours();
@@ -82,8 +83,7 @@ const ChatFilter = memo(
         anchor={
           <TouchableOpacity
             style={styles.chatFilterContainer}
-            onPress={showMenu}
-          >
+            onPress={showMenu}>
             <Text style={styles.chatFilterText} numberOfLines={1}>
               {filter}
             </Text>
@@ -95,16 +95,14 @@ const ChatFilter = memo(
           </TouchableOpacity>
         }
         onRequestClose={hideMenu}
-        style={styles.chatMenuContainer}
-      >
+        style={styles.chatMenuContainer}>
         <MenuItem
           onPress={() => {
             hideMenu();
             setType('everyone');
             setReceiverObject('everyone');
             setFilter('everyone');
-          }}
-        >
+          }}>
           <View style={styles.chatMenuItem}>
             <Ionicons
               name="people-outline"
@@ -124,8 +122,7 @@ const ChatFilter = memo(
                 setReceiverObject(knownRole);
                 setFilter(knownRole?.name!);
               }}
-              key={knownRole.name}
-            >
+              key={knownRole.name}>
               <View style={styles.chatMenuItem}>
                 <Text style={styles.chatMenuItemName}>{knownRole?.name}</Text>
               </View>
@@ -134,16 +131,16 @@ const ChatFilter = memo(
         })}
         <MenuDivider color={COLORS.BORDER.LIGHT} />
         {remotePeers?.map(remotePeer => {
+          const remotePeerName = remotePeer.name ? remotePeer.name : '';
           return (
             <MenuItem
               onPress={() => {
                 hideMenu();
                 setType('direct');
                 setReceiverObject(remotePeer);
-                setFilter(remotePeer.name);
+                setFilter(remotePeerName);
               }}
-              key={remotePeer.name}
-            >
+              key={remotePeer.name}>
               <View style={styles.chatMenuItem}>
                 <Ionicons
                   name="person-outline"
@@ -199,8 +196,7 @@ const ChatList = ({
                 styles.privateMessageBubble,
               isLocal && styles.sendMessageBubble,
             ]}
-            key={index}
-          >
+            key={index}>
             <View style={styles.headingContainer}>
               <View style={styles.headingLeftContainer}>
                 <Text style={styles.senderName}>
@@ -256,8 +252,7 @@ const ChatList = ({
             </View>
             <Text
               style={[styles.messageText, {color: 'gray'}]}
-              ellipsizeMode="middle"
-            >
+              ellipsizeMode="middle">
               {data.messageId}
             </Text>
             <Text style={styles.messageText}>{data.message}</Text>
@@ -426,8 +421,7 @@ export const ChatWindow = ({localPeer}: {localPeer?: HMSLocalPeer}) => {
         <ChatList setSessionMetaData={setSessionMetaData} />
       </View>
       <View
-        style={bottom === 0 ? styles.inputContainer : {marginBottom: bottom}}
-      >
+        style={bottom === 0 ? styles.inputContainer : {marginBottom: bottom}}>
         <CustomInput
           value={text}
           onChangeText={setText}

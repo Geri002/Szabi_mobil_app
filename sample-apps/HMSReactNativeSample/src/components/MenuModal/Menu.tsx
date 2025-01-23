@@ -185,14 +185,17 @@ export class Menu extends React.Component<MenuProps, State> {
 
     // Adjust position of menu
     let {left, top} = this.state;
-    const transforms = [];
+    const transforms: NonNullable<ViewStyle['transform']> = [];
 
     if (
       (isRTL && left + buttonWidth - menuWidth > SCREEN_INDENT) ||
       (!isRTL && left + menuWidth > windowWidth - SCREEN_INDENT)
     ) {
       transforms.push({
-        translateX: Animated.multiply(menuSizeAnimation.x, -1),
+        translateX: Animated.multiply(
+          menuSizeAnimation.x,
+          -1,
+        ) as unknown as number,
       });
 
       left = Math.min(windowWidth - SCREEN_INDENT, left + buttonWidth);
@@ -203,7 +206,10 @@ export class Menu extends React.Component<MenuProps, State> {
     // Flip by Y axis if menu hits bottom screen border
     if (top > windowHeight - menuHeight - SCREEN_INDENT) {
       transforms.push({
-        translateY: Animated.multiply(menuSizeAnimation.y, -1),
+        translateY: Animated.multiply(
+          menuSizeAnimation.y,
+          -1,
+        ) as unknown as number,
       });
 
       top = windowHeight - SCREEN_INDENT;
@@ -241,12 +247,10 @@ export class Menu extends React.Component<MenuProps, State> {
             'landscape-left',
             'landscape-right',
           ]}
-          transparent
-        >
+          transparent>
           <TouchableWithoutFeedback
             onPress={this.onRequestClose}
-            accessible={false}
-          >
+            accessible={false}>
             <View style={StyleSheet.absoluteFill}>
               <Animated.View
                 onLayout={this.onMenuLayout}
@@ -254,15 +258,12 @@ export class Menu extends React.Component<MenuProps, State> {
                   styles.shadowMenuContainer,
                   shadowMenuContainerStyle,
                   style,
-                ]}
-              >
+                ]}>
                 <Animated.View
-                  style={[styles.menuContainer, animationStarted && menuSize]}
-                >
+                  style={[styles.menuContainer, animationStarted && menuSize]}>
                   <ScrollView
                     style={styles.children}
-                    keyboardShouldPersistTaps="always"
-                  >
+                    keyboardShouldPersistTaps="always">
                     {children}
                   </ScrollView>
                 </Animated.View>

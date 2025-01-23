@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {StyleSheet, View, StyleProp, ViewStyle} from 'react-native';
 import Modal, {SupportedAnimation} from 'react-native-modal';
@@ -45,16 +46,14 @@ export const DefaultModal: React.FC<DefaultModalProps> = ({
       onBackdropPress={setModalVisible}
       onDismiss={setModalVisible}
       onBackButtonPress={setModalVisible}
-      style={[modalStyle, {margin: 0, justifyContent: modalPosiion}]}
-    >
+      style={[modalStyle, {margin: 0, justifyContent: modalPosiion}]}>
       <View
         style={[
           styles.contentContainer,
           modalPosiion === 'flex-end' ? styles.end : styles.center,
           viewStyle,
           {marginLeft: left, marginRight: right},
-        ]}
-      >
+        ]}>
         {modalPosiion === 'flex-end' && (
           <CustomButton
             onPress={setModalVisible}

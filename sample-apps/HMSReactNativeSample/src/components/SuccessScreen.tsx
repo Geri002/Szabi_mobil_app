@@ -7,10 +7,14 @@ import * as Progress from 'react-native-progress';
 import {useAuth} from '../context/AuthContext';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParamList} from '../navigator';
+import HMSSDK from '@100mslive/react-native-hms';
+import Config from 'react-native-config';
+import {useDispatch} from 'react-redux';
+import {saveUserData} from '../redux/actions';
 
-type SubScreenNavigationProp = NativeStackNavigationProp<
+type MeetingScreenNavigationProp = NativeStackNavigationProp<
   AppStackParamList,
-  'SubscriptionScreen'
+  'MeetingScreen'
 >;
 
 type SuccessScreenNavigationProp = RouteProp<
@@ -19,9 +23,11 @@ type SuccessScreenNavigationProp = RouteProp<
 >;
 
 export default function SuccessScreen() {
-  const navigation = useNavigation<SubScreenNavigationProp>();
+  const navigation = useNavigation<MeetingScreenNavigationProp>();
 
   const route = useRoute<SuccessScreenNavigationProp>();
+  const dispatch = useDispatch();
+
   const {user} = useAuth();
 
   const {uid, sessionId} = route.params || {};
@@ -56,14 +62,21 @@ export default function SuccessScreen() {
     }, 1000) as unknown as number;
 
     const timer = setTimeout(() => {
-      navigation.navigate('SubscriptionScreen');
+      (async () => {
+        const hmsInstance = await HMSSDK.build();
+        const token = Config.AUTH_TOKEN ? Config.AUTH_TOKEN : '';
+        const userName = Config.USER_NAME ? Config.USER_NAME : 'Néző';
+        await hmsInstance.join({authToken: token, username: userName});
+        dispatch(saveUserData({hmsInstance}));
+        navigation.navigate('MeetingScreen');
+      })();
     }, 15000);
 
     return () => {
       clearTimeout(timer);
       clearInterval(countInterval);
     };
-  }, [uid, sessionId, navigation, user]);
+  }, [uid, sessionId, navigation, user, dispatch]);
 
   return (
     <View style={styles.container}>

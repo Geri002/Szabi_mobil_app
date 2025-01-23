@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -104,10 +105,11 @@ export const PeerSettingsModalContent: React.FC<
 
       if (tileAudioTrackId || tileVideoTrackId) {
         // Toggle `spotlight` key value on Session Store
-        await hmsSessionStore.set(
-          onSpotlight ? null : tileAudioTrackId || tileVideoTrackId,
-          'spotlight',
-        );
+        const spotlightValue = onSpotlight
+          ? null
+          : tileAudioTrackId ?? tileVideoTrackId ?? null;
+
+        await hmsSessionStore.set(spotlightValue, 'spotlight');
       }
     } catch (error) {
       console.log('Add to spotlight error -> ', error);
@@ -256,8 +258,7 @@ const SettingItem: React.FC<SettingItemProps> = ({
     <TouchableOpacity
       disabled={disabled}
       style={[styles.button, disabled ? {opacity: 0.6} : null]}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       <IconType name={iconName} size={24} style={styles.icon} />
 
       <Text style={styles.text}>{text}</Text>

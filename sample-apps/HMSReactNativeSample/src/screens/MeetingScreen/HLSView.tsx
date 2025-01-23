@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {ComponentRef, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View, Text} from 'react-native';

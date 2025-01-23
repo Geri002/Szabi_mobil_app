@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {HMSTrackSource} from '@100mslive/react-native-hms';
@@ -47,8 +48,7 @@ const TileUnmemoized: React.FC<TileProps> = ({
                 orientation,
               ),
             },
-      ]}
-    >
+      ]}>
       <DisplayTrack
         // saving HmsView ref in collection with uniqueId as key
         ref={ref => setHmsViewRefs(peerTrackNode.id, ref)}
@@ -68,8 +68,7 @@ const TileUnmemoized: React.FC<TileProps> = ({
             padding: 8,
             backgroundColor: COLORS.SECONDARY.DISABLED,
             borderRadius: 18,
-          }}
-        >
+          }}>
           <Feather name="more-horizontal" style={styles.mic} size={20} />
         </TouchableOpacity>
       </View>

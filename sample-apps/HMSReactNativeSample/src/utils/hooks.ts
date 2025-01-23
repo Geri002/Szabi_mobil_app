@@ -132,5 +132,5 @@ export const useRTCStatsListeners = (force?: boolean) => {
         );
       };
     }
-  }, [hmsInstance, addListeners]);
+  }, [hmsInstance, addListeners, dispatch]);
 };

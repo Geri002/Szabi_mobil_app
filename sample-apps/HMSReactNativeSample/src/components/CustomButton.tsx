@@ -42,8 +42,7 @@ const CustomButton = ({
         disabled && styles.disabled,
         loading && styles.opacity,
       ]}
-      onPress={onButtonPress}
-    >
+      onPress={onButtonPress}>
       {loading ? (
         <ActivityIndicator color={COLORS.WHITE} />
       ) : (

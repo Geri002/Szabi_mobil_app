@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, {ElementRef, useRef, useState, useImperativeHandle} from 'react';
 import {View, FlatList} from 'react-native';
 import type {HMSView, HMSPeer} from '@100mslive/react-native-hms';
@@ -85,7 +86,7 @@ const GridView = React.forwardRef<GridViewRefAttrs, GridViewProps>(
           />
         );
       },
-      [onPeerTileMorePress, orientation, setHmsViewRefs],
+      [onPeerTileMorePress, orientation, setHmsViewRefs, setIsScreenShared],
     );
 
     const _keyExtractor = React.useCallback(item => item[0]?.id, []);
@@ -110,8 +111,7 @@ const GridView = React.forwardRef<GridViewRefAttrs, GridViewProps>(
         <DefaultModal
           modalPosiion="center"
           modalVisible={!!screenshotData}
-          setModalVisible={() => setScreenshotData(null)}
-        >
+          setModalVisible={() => setScreenshotData(null)}>
           <SaveScreenshot
             imageSource={screenshotData?.source}
             peer={screenshotData?.peer}

@@ -118,7 +118,7 @@ export const RoomSettingsModalContent: React.FC<
     closeRoomSettingsModal();
 
     try {
-      const isEnabled = await hmsInstance?.enablePipMode({
+      const isEnabled = await hmsInstance?.enterPipMode({
         aspectRatio: [16, 9], // for 16:9 aspect ratio
         endButton: true,
         videoButton: true,
@@ -354,8 +354,7 @@ export const RoomSettingsModalContent: React.FC<
 
       <ScrollView
         style={styles.contentContainer}
-        contentContainerStyle={styles.scrollContentContainer}
-      >
+        contentContainerStyle={styles.scrollContentContainer}>
         <TouchableOpacity onPress={handleBRB} style={styles.button}>
           <Image
             source={require('../../assets/brb.png')}

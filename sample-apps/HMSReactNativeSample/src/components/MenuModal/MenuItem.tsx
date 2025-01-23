@@ -39,8 +39,7 @@ export function MenuItem({
       })}
       android_ripple={{color: pressColor}}
       onPress={onPress}
-      {...props}
-    >
+      {...props}>
       <View style={[styles.container, style]}>
         <Text
           numberOfLines={1}
@@ -48,8 +47,7 @@ export function MenuItem({
             styles.title,
             disabled && {color: disabledTextColor},
             textStyle,
-          ]}
-        >
+          ]}>
           {children}
         </Text>
       </View>

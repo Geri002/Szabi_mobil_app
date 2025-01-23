@@ -1,6 +1,6 @@
+/* eslint-disable no-spaced-func */
 /* eslint-disable react-native/no-inline-styles */
 import {
-  HMSAudioFilePlayerNode,
   HMSAudioMixingMode,
   HMSAudioMode,
   HMSChangeTrackStateRequest,
@@ -20,9 +20,8 @@ import {
   HMSUpdateListenerActions,
   HMSPIPListenerActions,
   HMSCameraControl,
-  HMSSessionStoreValue,
 } from '@100mslive/react-native-hms';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -42,11 +41,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import DocumentPicker from 'react-native-document-picker';
 
 import {styles} from './styles';
 import {
-  AlertModal,
   ChatWindow,
   CustomButton,
   DefaultModal,
@@ -97,7 +94,6 @@ import type {RootState} from '../../redux';
 import type {AppStackParamList} from '../../navigator';
 import {
   addMessage,
-  addPinnedMessage,
   changePipModeStatus,
   clearHmsReference,
   clearMessageData,
@@ -213,7 +209,7 @@ const Meeting = () => {
         dispatch(changePipModeStatus(PipModes.INACTIVE));
       };
     }
-  }, [isPipModeActive]);
+  }, [isPipModeActive, dispatch]);
 
   useRTCStatsListeners(modalVisible === ModalTypes.RTC_STATS);
 
@@ -285,14 +281,11 @@ const DisplayView = (data: {
   setIsScreenShared: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }) => {
   // hooks
-  const {params} = useRoute<MeetingScreenRouteProp>();
+  useRoute<MeetingScreenRouteProp>();
   const isPipModeActive = useSelector(
     (state: RootState) => state.app.pipModeStatus === PipModes.ACTIVE,
   );
   const hmsInstance = useSelector((state: RootState) => state.user.hmsInstance);
-  const hmsSessionStore = useSelector(
-    (state: RootState) => state.user.hmsSessionStore,
-  );
 
   // State to track active spotlight trackId
   const spotlightTrackId = useSelector(
@@ -306,9 +299,7 @@ const DisplayView = (data: {
   const [peerTrackNodes, setPeerTrackNodes] =
     useState<Array<PeerTrackNode>>(peerState);
   const [orientation, setOrientation] = useState(true);
-  const [layout, setLayout] = useState<LayoutParams>(
-    params?.isHLSViewer ? LayoutParams.HLS : LayoutParams.GRID,
-  );
+  const [layout, setLayout] = useState<LayoutParams>(LayoutParams.GRID); // params?.isHLSViewer ? LayoutParams.HLS :
   const [updatePeer, setUpdatePeer] = useState<HMSPeer>();
   const [selectedPeerTrackNode, setSelectedPeerTrackNode] =
     useState<PeerTrackNode | null>(null);
@@ -746,22 +737,19 @@ const DisplayView = (data: {
     hms?.addEventListener(HMSPIPListenerActions.ON_PIP_ROOM_LEAVE, destroy);
   };
 
-  const removeHmsInstanceListeners = (hms?: HMSSDK) => {
+  const removeHmsInstanceListeners = useCallback((hms?: HMSSDK) => {
     hms?.removeEventListener(HMSUpdateListenerActions.ON_ROOM_UPDATE);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_PEER_UPDATE);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_TRACK_UPDATE);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_ERROR);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_REMOVED_FROM_ROOM);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_MESSAGE);
-    // hms?.removeEventListener(HMSUpdateListenerActions.ON_SPEAKER);
-    // hms?.removeEventListener(HMSUpdateListenerActions.RECONNECTING);
-    // hms?.removeEventListener(HMSUpdateListenerActions.RECONNECTED);
     hms?.removeEventListener(HMSUpdateListenerActions.ON_ROLE_CHANGE_REQUEST);
     hms?.removeEventListener(
       HMSUpdateListenerActions.ON_CHANGE_TRACK_STATE_REQUEST,
     );
     hms?.removeEventListener(HMSPIPListenerActions.ON_PIP_ROOM_LEAVE);
-  };
+  }, []);
 
   const changePeerTrackNodes = (
     nodesPresent: PeerTrackNode[],
@@ -804,14 +792,14 @@ const DisplayView = (data: {
     peerTrackNodesRef.current = newPeerTrackNodes;
   };
 
-  const destroy = async () => {
+  const destroy = useCallback(async () => {
     await hmsInstance
       ?.destroy()
       .then(s => {
         dispatch(clearMessageData());
         dispatch(clearPeerData());
         dispatch(clearHmsReference());
-        navigate('QRCodeScreen');
+        navigate('Login');
         console.log('Destroy Success: ', s);
       })
       .catch(e => {
@@ -822,9 +810,9 @@ const DisplayView = (data: {
           Toast.TOP,
         );
       });
-  };
+  }, [dispatch, hmsInstance, navigate]);
 
-  const onLeavePress = async () => {
+  const onLeavePress = useCallback(async () => {
     await hmsInstance
       ?.leave()
       .then(async d => {
@@ -839,7 +827,7 @@ const DisplayView = (data: {
         console.log(`Leave Room Error: ${e}`);
         Toast.showWithGravity(`Leave Room Error: ${e}`, Toast.LONG, Toast.TOP);
       });
-  };
+  }, [hmsInstance, destroy, removeHmsInstanceListeners]);
 
   const onEndRoomPress = async () => {
     await hmsInstance
@@ -861,7 +849,7 @@ const DisplayView = (data: {
       setSelectedPeerTrackNode(peerTrackNode);
       data?.setModalVisible(ModalTypes.PEER_SETTINGS);
     },
-    [data?.setModalVisible],
+    [data],
   );
 
   const onChangeRolePress = (peer: HMSPeer) => {
@@ -923,143 +911,145 @@ const DisplayView = (data: {
     });
   };
 
-  useEffect(() => {
-    // Check if instance of HMSSessionStore is available
-    if (hmsSessionStore) {
-      let toastTimeoutId: NodeJS.Timeout | null = null;
+  // useEffect(() => {
+  //   // Check if instance of HMSSessionStore is available
+  //   if (hmsSessionStore) {
+  //     let toastTimeoutId: NodeJS.Timeout | null = null;
 
-      const addSessionStoreListeners = () => {
-        // Handle 'spotlight' key values
-        const handleSpotlightIdChange = (id: HMSSessionStoreValue) => {
-          // Scroll to start of the list
-          if (id) {
-            gridViewRef.current
-              ?.getFlatlistRef()
-              .current?.scrollToOffset({animated: true, offset: 0});
-          }
-          // set value to the state to rerender the component to reflect changes
-          dispatch(saveUserData({spotlightTrackId: id}));
-        };
+  //     const addSessionStoreListeners = () => {
+  //       // Handle 'spotlight' key values
+  //       const handleSpotlightIdChange = (
+  //         id: HMSSessioHMSSessionStorenStoreValue,
+  //       ) => {
+  //         // Scroll to start of the list
+  //         if (id) {
+  //           gridViewRef.current
+  //             ?.getFlatlistRef()
+  //             .current?.scrollToOffset({animated: true, offset: 0});
+  //         }
+  //         // set value to the state to rerender the component to reflect changes
+  //         dispatch(saveUserData({spotlightTrackId: id}));
+  //       };
 
-        // Handle 'pinnedMessage' key values
-        const handlePinnedMessageChange = (data: HMSSessionStoreValue) => {
-          dispatch(addPinnedMessage(data));
-        };
+  //       // Handle 'pinnedMessage' key values
+  //       const handlePinnedMessageChange = (data: HMSSessionStoreValue) => {
+  //         dispatch(addPinnedMessage(data));
+  //       };
 
-        // Getting value for 'spotlight' key by using `get` method on HMSSessionStore instance
-        hmsSessionStore
-          .get('spotlight')
-          .then(data => {
-            console.log(
-              'Session Store get `spotlight` key value success: ',
-              data,
-            );
-            handleSpotlightIdChange(data);
-          })
-          .catch(error =>
-            console.log(
-              'Session Store get `spotlight` key value error: ',
-              error,
-            ),
-          );
+  //       // Getting value for 'spotlight' key by using `get` method on HMSSessionStore instance
+  //       hmsSessionStore
+  //         .get('spotlight')
+  //         .then(data => {
+  //           console.log(
+  //             'Session Store get `spotlight` key value success: ',
+  //             data,
+  //           );
+  //           handleSpotlightIdChange(data);
+  //         })
+  //         .catch(error =>
+  //           console.log(
+  //             'Session Store get `spotlight` key value error: ',
+  //             error,
+  //           ),
+  //         );
 
-        // Getting value for 'pinnedMessage' key by using `get` method on HMSSessionStore instance
-        hmsSessionStore
-          .get('pinnedMessage')
-          .then(data => {
-            console.log(
-              'Session Store get `pinnedMessage` key value success: ',
-              data,
-            );
-            handlePinnedMessageChange(data);
-          })
-          .catch(error =>
-            console.log(
-              'Session Store get `pinnedMessage` key value error: ',
-              error,
-            ),
-          );
+  //       // Getting value for 'pinnedMessage' key by using `get` method on HMSSessionStore instance
+  //       hmsSessionStore
+  //         .get('pinnedMessage')
+  //         .then(data => {
+  //           console.log(
+  //             'Session Store get `pinnedMessage` key value success: ',
+  //             data,
+  //           );
+  //           handlePinnedMessageChange(data);
+  //         })
+  //         .catch(error =>
+  //           console.log(
+  //             'Session Store get `pinnedMessage` key value error: ',
+  //             error,
+  //           ),
+  //         );
 
-        let lastSpotlightValue: HMSSessionStoreValue = null;
-        let lastPinnedMessageValue: HMSSessionStoreValue = null;
+  //       let lastSpotlightValue: HMSSessionStoreValue = null;
+  //       let lastPinnedMessageValue: HMSSessionStoreValue = null;
 
-        // Add subscription for `spotlight` & `pinnedMessage` keys updates on Session Store
-        const subscription = hmsSessionStore.addKeyChangeListener<
-          ['spotlight', 'pinnedMessage']
-        >(['spotlight', 'pinnedMessage'], (error, data) => {
-          // If error occurs, handle error and return early
-          if (error !== null) {
-            console.log(
-              '`spotlight` & `pinnedMessage` key listener Error -> ',
-              error,
-            );
-            return;
-          }
+  //       // Add subscription for `spotlight` & `pinnedMessage` keys updates on Session Store
+  //       const subscription = hmsSessionStore.addKeyChangeListener<
+  //         ['spotlight', 'pinnedMessage']
+  //       >(['spotlight', 'pinnedMessage'], (error, data) => {
+  //         // If error occurs, handle error and return early
+  //         if (error !== null) {
+  //           console.log(
+  //             '`spotlight` & `pinnedMessage` key listener Error -> ',
+  //             error,
+  //           );
+  //           return;
+  //         }
 
-          // If no error, handle data
-          if (data !== null) {
-            switch (data.key) {
-              case 'spotlight': {
-                handleSpotlightIdChange(data.value);
+  //         // If no error, handle data
+  //         if (data !== null) {
+  //           switch (data.key) {
+  //             case 'spotlight': {
+  //               handleSpotlightIdChange(data.value);
 
-                // Showing Toast message if value has actually changed
-                if (
-                  data.value !== lastSpotlightValue &&
-                  (data.value || lastSpotlightValue)
-                ) {
-                  Toast.showWithGravity(
-                    `SessionStore: \`spotlight\` key's value changed to ${data.value}`,
-                    Toast.LONG,
-                    Toast.TOP,
-                  );
-                }
+  //               // Showing Toast message if value has actually changed
+  //               if (
+  //                 data.value !== lastSpotlightValue &&
+  //                 (data.value || lastSpotlightValue)
+  //               ) {
+  //                 Toast.showWithGravity(
+  //                   `SessionStore: \`spotlight\` key's value changed to ${data.value}`,
+  //                   Toast.LONG,
+  //                   Toast.TOP,
+  //                 );
+  //               }
 
-                lastSpotlightValue = data.value;
-                break;
-              }
-              case 'pinnedMessage': {
-                handlePinnedMessageChange(data.value);
+  //               lastSpotlightValue = data.value;
+  //               break;
+  //             }
+  //             case 'pinnedMessage': {
+  //               handlePinnedMessageChange(data.value);
 
-                // Showing Toast message if value has actually changed
-                if (
-                  data.value !== lastPinnedMessageValue &&
-                  (data.value || lastPinnedMessageValue)
-                ) {
-                  if (toastTimeoutId !== null) {
-                    clearTimeout(toastTimeoutId);
-                  }
-                  toastTimeoutId = setTimeout(() => {
-                    Toast.showWithGravity(
-                      `SessionStore: \`pinnedMessage\` key's value changed to ${data.value}`,
-                      Toast.LONG,
-                      Toast.TOP,
-                    );
-                  }, 1500);
-                }
+  //               // Showing Toast message if value has actually changed
+  //               if (
+  //                 data.value !== lastPinnedMessageValue &&
+  //                 (data.value || lastPinnedMessageValue)
+  //               ) {
+  //                 if (toastTimeoutId !== null) {
+  //                   clearTimeout(toastTimeoutId);
+  //                 }
+  //                 toastTimeoutId = setTimeout(() => {
+  //                   Toast.showWithGravity(
+  //                     `SessionStore: \`pinnedMessage\` key's value changed to ${data.value}`,
+  //                     Toast.LONG,
+  //                     Toast.TOP,
+  //                   );
+  //                 }, 1500);
+  //               }
 
-                lastPinnedMessageValue = data.value;
-                break;
-              }
-            }
-          }
-        });
+  //               lastPinnedMessageValue = data.value;
+  //               break;
+  //             }
+  //           }
+  //         }
+  //       });
 
-        // Save reference of `subscription` in a ref
-        sessionStoreListeners.current.push(subscription);
-      };
+  //       // Save reference of `subscription` in a ref
+  //       sessionStoreListeners.current.push(subscription);
+  //     };
 
-      addSessionStoreListeners();
+  //     addSessionStoreListeners();
 
-      return () => {
-        // remove Session Store key update listener on cleanup
-        sessionStoreListeners.current.forEach(listener => listener.remove());
+  //     return () => {
+  //       // remove Session Store key update listener on cleanup
+  //       sessionStoreListeners.current.forEach(listener => listener.remove());
 
-        if (toastTimeoutId !== null) {
-          clearTimeout(toastTimeoutId);
-        }
-      };
-    }
-  }, [hmsSessionStore]);
+  //       if (toastTimeoutId !== null) {
+  //         clearTimeout(toastTimeoutId);
+  //       }
+  //     };
+  //   }
+  // }, [hmsSessionStore, dispatch]);
 
   // useEffect hook
   useEffect(() => {
@@ -1094,19 +1084,19 @@ const DisplayView = (data: {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', backButtonHandler);
     };
-  }, []);
+  }, [onLeavePress]);
 
   useEffect(() => {
     const localPeer = data?.localPeer;
 
-    if (localPeer) {
+    if (localPeer?.role?.name) {
       if (localPeer.role?.name?.includes('hls-')) {
         setLayout(LayoutParams.HLS);
       } else {
         setLayout(LayoutParams.GRID);
       }
     }
-  }, [data?.localPeer?.role?.name]);
+  }, [data?.localPeer, data?.localPeer?.role?.name]);
 
   return (
     <View style={styles.container}>
@@ -1615,7 +1605,7 @@ const Footer = ({
 
       check();
     }
-  }, [isPipActive, hmsInstance]);
+  }, [isPipActive, hmsInstance, dispatch]);
 
   return (
     <View

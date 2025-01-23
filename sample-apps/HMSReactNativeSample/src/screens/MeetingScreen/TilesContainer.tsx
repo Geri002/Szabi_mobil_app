@@ -30,8 +30,7 @@ const TilesContainerUnmemoized: React.FC<TilesContainerProps> = ({
       style={[
         styles.page,
         {width: Dimensions.get('window').width - left - right},
-      ]}
-    >
+      ]}>
       {peerTrackNodes?.map((peerTrackNode, _idx, arr) => (
         <Tile
           key={peerTrackNode.id}

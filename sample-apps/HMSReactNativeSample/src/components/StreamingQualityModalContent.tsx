@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {View, TouchableOpacity, Text, StyleSheet, Platform} from 'react-native';
@@ -100,8 +101,7 @@ export const StreamingQualityModalContent: React.FC<
           anchor={
             <TouchableOpacity
               style={styles.participantFilterContainer}
-              onPress={() => setShowQualityOptions(true)}
-            >
+              onPress={() => setShowQualityOptions(true)}>
               <Text style={styles.participantFilterText} numberOfLines={1}>
                 {selectedLayer}
               </Text>
@@ -113,8 +113,7 @@ export const StreamingQualityModalContent: React.FC<
             </TouchableOpacity>
           }
           onRequestClose={() => setShowQualityOptions(false)}
-          style={styles.participantsMenuContainer}
-        >
+          style={styles.participantsMenuContainer}>
           {layerDefinitions.map(layerDefinition => {
             const isSelected = layerDefinition.layer === selectedLayer;
 
@@ -127,8 +126,7 @@ export const StreamingQualityModalContent: React.FC<
                 key={layerDefinition.layer}
                 style={
                   isSelected ? styles.participantMenuActiveItem : undefined
-                }
-              >
+                }>
                 <View style={styles.participantMenuItem}>
                   <Text style={styles.participantFilterText}>
                     {layerDefinition.layer} {layerDefinition.resolution.width}x

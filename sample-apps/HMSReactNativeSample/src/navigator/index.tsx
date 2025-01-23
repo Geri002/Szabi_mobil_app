@@ -5,11 +5,7 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
-import {Welcome} from '../screens/Welcome';
 import {Meeting} from '../screens/MeetingScreen/index';
-// import {Meeting} from '../screens/Meeting';
-import {QRCode} from '../screens/QRCode';
-import {QRCodeScanner} from '../screens/QRCodeScanner';
 import TermsScreen from '../components/TermsScreen';
 import LoginScreen from '../components/LoginScreen';
 import SubscriptionScreen from '../components/SubscriptionScreen';
@@ -20,10 +16,7 @@ import TimeoutScreen from '../components/TimeoutScreen';
 import SuccessScreen from '../components/SuccessScreen';
 
 export type AppStackParamList = {
-  WelcomeScreen: undefined;
   MeetingScreen: undefined;
-  QRCodeScreen: undefined;
-  QRCodeScannerScreen: undefined;
   TermsScreen: undefined;
   Login: undefined;
   SubscriptionScreen: undefined;
@@ -54,6 +47,11 @@ export type LogicScreenNavigationProp = NativeStackNavigationProp<
 export type SubScreenNavigationProp = NativeStackNavigationProp<
   AppStackParamList,
   'SubscriptionScreen'
+>;
+
+export type MeetingScreenNavigationProp = NativeStackNavigationProp<
+  AppStackParamList,
+  'MeetingScreen'
 >;
 
 export type CanceledScreenNavigationProp = NativeStackNavigationProp<
@@ -100,23 +98,8 @@ const AppStackNavigator = () => {
           options={{headerShown: false}}
         />
         <AppStack.Screen
-          name="WelcomeScreen"
-          component={Welcome}
-          options={navigationOptions}
-        />
-        <AppStack.Screen
           name="MeetingScreen"
           component={Meeting}
-          options={navigationOptions}
-        />
-        <AppStack.Screen
-          name="QRCodeScreen"
-          component={QRCode}
-          options={navigationOptions}
-        />
-        <AppStack.Screen
-          name="QRCodeScannerScreen"
-          component={QRCodeScanner}
           options={navigationOptions}
         />
         <AppStack.Screen
