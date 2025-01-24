@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "android": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-native run-android",
-    "ios": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-native run-ios --device \"100ms iPhone XR\"",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-native start",
+    "android": "cross-env react-native run-android",
+    "ios": "cross-env react-native run-ios --device \"100ms iPhone XR\"",
+    "start": "cross-env react-native start",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -15,10 +15,11 @@
     "@react-native-firebase/app": "^21.7.1",
     "@react-native-firebase/auth": "^21.7.1",
     "@react-native-firebase/firestore": "^21.7.1",
+    "@react-native/metro-config": "^0.77.0",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
-    "react": "17.0.2",
-    "react-native": "0.66.5",
+    "react": "^18.1.0",
+    "react-native": "0.70.0",
     "react-native-config": "^1.5.3",
     "react-native-document-picker": "^8.2.2",
     "react-native-fs": "^2.19.0",
@@ -48,7 +49,7 @@
     "eslint": "7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.66.2",
-    "react-test-renderer": "17.0.2",
+    "react-test-renderer": "18.1.0",
     "typescript": "^3.8.3"
   },
   "jest": {
